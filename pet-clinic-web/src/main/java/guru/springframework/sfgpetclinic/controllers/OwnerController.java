@@ -3,7 +3,12 @@ package guru.springframework.sfgpetclinic.controllers;
 import guru.springframework.sfgpetclinic.services.OwnerService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 @RequestMapping("/owners")
 @Controller
@@ -13,6 +18,11 @@ public class OwnerController {
 
     public OwnerController(OwnerService ownerService) {
         this.ownerService = ownerService;
+    }
+
+    @InitBinder
+    public void setAllowedFields(WebDataBinder dataBinder) {
+        dataBinder.setDisallowedFields("id");
     }
 
     @RequestMapping({"", "/", "/index", "/index.html"})
@@ -26,4 +36,10 @@ public class OwnerController {
         return "notimplemented";
     }
 
+    @GetMapping("/{ownerId}")
+    public ModelAndView showOwner(@PathVariable("ownerId") Long ownerId ) {
+        ModelAndView modelAndView = new ModelAndView("owners/ownerdetails");
+        modelAndView.addObject(ownerService.findById(ownerId));
+        return modelAndView;
+    }
 }
