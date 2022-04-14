@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @RequestMapping("/owners")
 @Controller
@@ -51,11 +53,16 @@ public class OwnerController {
     @GetMapping
     public String processFindForm(Owner owner, BindingResult result, Model model) {
 
-        // allow parameterless GET request for /owners to return all records
-        if (owner.getLastName() == null) owner.setLastName("");
+        List<Owner> ownerList;
 
-        // find owner by lastname
-        List<Owner> ownerList = ownerService.findAllByLastNameLike("%" + owner.getLastName() + "%");
+        if (owner.getLastName() == null) {
+            // allow parameterless GET request for /owners to return all records
+            Set<Owner> ownerSet = ownerService.findAll();
+            ownerList = new ArrayList<Owner>(ownerSet);
+        } else {
+            // find owner by lastname
+            ownerList = ownerService.findAllByLastNameLike("%" + owner.getLastName() + "%");
+        }
 
         if (ownerList.isEmpty()) {
             // no owners found

@@ -43,34 +43,6 @@ class OwnerControllerTest {
                 .build();
     }
 
-//    @Test
-//    void listOwners() throws Exception {
-//
-//        //given
-//        when(ownerService.findAll()).thenReturn(owners);
-//
-//        //When
-//        mockMvc.perform(get("/owners"))
-//                .andExpect(status().isOk())
-//                .andExpect(view().name("owners/index"))
-//                .andExpect(model().attribute("owners", hasSize(2)));
-//        verify(ownerService, times(1)).findAll();
-//    }
-//
-//    @Test
-//    void listOwnersByIndex() throws Exception {
-//
-//        //given
-//        when(ownerService.findAll()).thenReturn(owners);
-//
-//        //When
-//        mockMvc.perform(get("/owners/index"))
-//                .andExpect(status().isOk())
-//                .andExpect(view().name("owners/index"))
-//                .andExpect(model().attribute("owners", hasSize(2)));
-//        verify(ownerService, times(1)).findAll();
-//    }
-
     @Test
     void findOwners() throws Exception {
 
@@ -121,6 +93,20 @@ class OwnerControllerTest {
         mockMvc.perform(get("/owners"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/owners/1"));
+
+    }
+
+    @Test
+    void processFindFormReturnAll() throws Exception {
+        when(ownerService.findAllByLastNameLike(null))
+                .thenReturn(Arrays.asList(Owner.builder().id(1L).build(),
+                        Owner.builder().id(2L).build()));
+        when(ownerService.findAll()).thenReturn(owners);
+
+        mockMvc.perform(get("/owners"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("owners/ownersList"))
+                .andExpect(model().attribute("selections", hasSize(2)));
 
     }
 }
