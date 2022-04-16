@@ -3,7 +3,6 @@ package guru.springframework.sfgpetclinic.controllers;
 import guru.springframework.sfgpetclinic.model.Owner;
 import guru.springframework.sfgpetclinic.model.PetType;
 import guru.springframework.sfgpetclinic.services.OwnerService;
-import guru.springframework.sfgpetclinic.services.PetService;
 import guru.springframework.sfgpetclinic.services.PetTypeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
@@ -19,16 +18,15 @@ import java.util.Collection;
 public class PetController {
 
 
-    private final PetService petService;
+//    private final PetService petService;
     private final OwnerService ownerService;
     private final PetTypeService petTypeService;
 
-
-    public PetController(PetService petService, OwnerService ownerService, PetTypeService petTypeService) {
-        this.petService = petService;
+    public PetController(OwnerService ownerService, PetTypeService petTypeService) {
         this.ownerService = ownerService;
         this.petTypeService = petTypeService;
     }
+
 
     @ModelAttribute("types")
     public Collection<PetType> populatePetTypes() {
